@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.2-alpha (2024-05-17)
+
+Full Changelog: [v0.0.1-alpha...v0.0.2-alpha](https://github.com/yike5460/MLM-SDK/compare/v0.0.1-alpha...v0.0.2-alpha)
+
+### Chores
+
+* update SDK settings ([#5](https://github.com/yike5460/MLM-SDK/issues/5)) ([44f3e04](https://github.com/yike5460/MLM-SDK/commit/44f3e04f6d3d891b63366310fea0d8ae6cd7a07d))
+
 ## 0.0.1-alpha (2024-05-17)
 
 Full Changelog: [v0.0.1-alpha.0...v0.0.1-alpha](https://github.com/yike5460/MLM-SDK/compare/v0.0.1-alpha.0...v0.0.1-alpha)
