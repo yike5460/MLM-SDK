@@ -1,6 +1,6 @@
 # Mlm Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/mlm.svg)](https://pypi.org/project/mlm/)
+[![PyPI version](https://img.shields.io/pypi/v/mlm-v1.0.svg)](https://pypi.org/project/mlm-v1.0/)
 
 The Mlm Python library provides convenient access to the Mlm REST API from any Python 3.7+
 application. The library includes type definitions for all request params and response fields,
@@ -16,7 +16,7 @@ The REST API documentation can be found [on docs.mlm.com](https://docs.mlm.com).
 
 ```sh
 # install from PyPI
-pip install --pre mlm
+pip install --pre mlm-v1.0
 ```
 
 ## Usage
