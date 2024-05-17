@@ -1,5 +1,5 @@
 [project]
-name = "mlm"
+name = "mlm-v1.0"
 version = "0.0.1-alpha"
 description = "The official Python library for the mlm API"
 dynamic = ["readme"]
