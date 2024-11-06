@@ -18,9 +18,7 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import (
-    make_request_options,
-)
+from .._base_client import make_request_options
 from ..types.model_details import ModelDetails
 from ..types.model_list_response import ModelListResponse
 from ..types.model_create_response import ModelCreateResponse
@@ -32,10 +30,21 @@ __all__ = ["ModelsResource", "AsyncModelsResource"]
 class ModelsResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> ModelsResourceWithRawResponse:
+        """
+        This property can be used as a prefix for any HTTP method call to return the
+        the raw response object instead of the parsed content.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#accessing-raw-response-data-eg-headers
+        """
         return ModelsResourceWithRawResponse(self)
 
     @cached_property
     def with_streaming_response(self) -> ModelsResourceWithStreamingResponse:
+        """
+        An alternative to `.with_raw_response` that doesn't eagerly read the response body.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#with_streaming_response
+        """
         return ModelsResourceWithStreamingResponse(self)
 
     def create(
@@ -203,10 +212,21 @@ class ModelsResource(SyncAPIResource):
 class AsyncModelsResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncModelsResourceWithRawResponse:
+        """
+        This property can be used as a prefix for any HTTP method call to return the
+        the raw response object instead of the parsed content.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#accessing-raw-response-data-eg-headers
+        """
         return AsyncModelsResourceWithRawResponse(self)
 
     @cached_property
     def with_streaming_response(self) -> AsyncModelsResourceWithStreamingResponse:
+        """
+        An alternative to `.with_raw_response` that doesn't eagerly read the response body.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#with_streaming_response
+        """
         return AsyncModelsResourceWithStreamingResponse(self)
 
     async def create(

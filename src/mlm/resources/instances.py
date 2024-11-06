@@ -18,9 +18,7 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import (
-    make_request_options,
-)
+from .._base_client import make_request_options
 from ..types.instance_details import InstanceDetails
 from ..types.instance_list_response import InstanceListResponse
 from ..types.instance_create_response import InstanceCreateResponse
@@ -32,10 +30,21 @@ __all__ = ["InstancesResource", "AsyncInstancesResource"]
 class InstancesResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> InstancesResourceWithRawResponse:
+        """
+        This property can be used as a prefix for any HTTP method call to return the
+        the raw response object instead of the parsed content.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#accessing-raw-response-data-eg-headers
+        """
         return InstancesResourceWithRawResponse(self)
 
     @cached_property
     def with_streaming_response(self) -> InstancesResourceWithStreamingResponse:
+        """
+        An alternative to `.with_raw_response` that doesn't eagerly read the response body.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#with_streaming_response
+        """
         return InstancesResourceWithStreamingResponse(self)
 
     def create(
@@ -206,10 +215,21 @@ class InstancesResource(SyncAPIResource):
 class AsyncInstancesResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncInstancesResourceWithRawResponse:
+        """
+        This property can be used as a prefix for any HTTP method call to return the
+        the raw response object instead of the parsed content.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#accessing-raw-response-data-eg-headers
+        """
         return AsyncInstancesResourceWithRawResponse(self)
 
     @cached_property
     def with_streaming_response(self) -> AsyncInstancesResourceWithStreamingResponse:
+        """
+        An alternative to `.with_raw_response` that doesn't eagerly read the response body.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#with_streaming_response
+        """
         return AsyncInstancesResourceWithStreamingResponse(self)
 
     async def create(
