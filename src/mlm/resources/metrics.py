@@ -18,9 +18,7 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import (
-    make_request_options,
-)
+from .._base_client import make_request_options
 from ..types.metric_list_response import MetricListResponse
 
 __all__ = ["MetricsResource", "AsyncMetricsResource"]
@@ -29,10 +27,21 @@ __all__ = ["MetricsResource", "AsyncMetricsResource"]
 class MetricsResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> MetricsResourceWithRawResponse:
+        """
+        This property can be used as a prefix for any HTTP method call to return the
+        the raw response object instead of the parsed content.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#accessing-raw-response-data-eg-headers
+        """
         return MetricsResourceWithRawResponse(self)
 
     @cached_property
     def with_streaming_response(self) -> MetricsResourceWithStreamingResponse:
+        """
+        An alternative to `.with_raw_response` that doesn't eagerly read the response body.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#with_streaming_response
+        """
         return MetricsResourceWithStreamingResponse(self)
 
     def list(
@@ -81,10 +90,21 @@ class MetricsResource(SyncAPIResource):
 class AsyncMetricsResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncMetricsResourceWithRawResponse:
+        """
+        This property can be used as a prefix for any HTTP method call to return the
+        the raw response object instead of the parsed content.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#accessing-raw-response-data-eg-headers
+        """
         return AsyncMetricsResourceWithRawResponse(self)
 
     @cached_property
     def with_streaming_response(self) -> AsyncMetricsResourceWithStreamingResponse:
+        """
+        An alternative to `.with_raw_response` that doesn't eagerly read the response body.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#with_streaming_response
+        """
         return AsyncMetricsResourceWithStreamingResponse(self)
 
     async def list(
