@@ -30,11 +30,11 @@ class TestModels:
     @parametrize
     def test_method_create_with_all_params(self, client: Mlm) -> None:
         model = client.models.create(
-            execution_role_arn="string",
-            model_name="string",
+            execution_role_arn="executionRoleArn",
+            model_name="modelName",
             primary_container={
-                "image": "string",
-                "model_data_url": "string",
+                "image": "Image",
+                "model_data_url": "ModelDataUrl",
             },
         )
         assert_matches_type(ModelCreateResponse, model, path=["response"])
@@ -62,14 +62,14 @@ class TestModels:
     @parametrize
     def test_method_retrieve(self, client: Mlm) -> None:
         model = client.models.retrieve(
-            "string",
+            "modelName",
         )
         assert_matches_type(ModelDetails, model, path=["response"])
 
     @parametrize
     def test_raw_response_retrieve(self, client: Mlm) -> None:
         response = client.models.with_raw_response.retrieve(
-            "string",
+            "modelName",
         )
 
         assert response.is_closed is True
@@ -80,7 +80,7 @@ class TestModels:
     @parametrize
     def test_streaming_response_retrieve(self, client: Mlm) -> None:
         with client.models.with_streaming_response.retrieve(
-            "string",
+            "modelName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -100,7 +100,7 @@ class TestModels:
     @parametrize
     def test_method_update(self, client: Mlm) -> None:
         model = client.models.update(
-            "string",
+            model_name="modelName",
             body={},
         )
         assert_matches_type(ModelUpdateResponse, model, path=["response"])
@@ -108,7 +108,7 @@ class TestModels:
     @parametrize
     def test_raw_response_update(self, client: Mlm) -> None:
         response = client.models.with_raw_response.update(
-            "string",
+            model_name="modelName",
             body={},
         )
 
@@ -120,7 +120,7 @@ class TestModels:
     @parametrize
     def test_streaming_response_update(self, client: Mlm) -> None:
         with client.models.with_streaming_response.update(
-            "string",
+            model_name="modelName",
             body={},
         ) as response:
             assert not response.is_closed
@@ -135,7 +135,7 @@ class TestModels:
     def test_path_params_update(self, client: Mlm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `model_name` but received ''"):
             client.models.with_raw_response.update(
-                "",
+                model_name="",
                 body={},
             )
 
@@ -167,14 +167,14 @@ class TestModels:
     @parametrize
     def test_method_delete(self, client: Mlm) -> None:
         model = client.models.delete(
-            "string",
+            "modelName",
         )
         assert_matches_type(object, model, path=["response"])
 
     @parametrize
     def test_raw_response_delete(self, client: Mlm) -> None:
         response = client.models.with_raw_response.delete(
-            "string",
+            "modelName",
         )
 
         assert response.is_closed is True
@@ -185,7 +185,7 @@ class TestModels:
     @parametrize
     def test_streaming_response_delete(self, client: Mlm) -> None:
         with client.models.with_streaming_response.delete(
-            "string",
+            "modelName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -214,11 +214,11 @@ class TestAsyncModels:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncMlm) -> None:
         model = await async_client.models.create(
-            execution_role_arn="string",
-            model_name="string",
+            execution_role_arn="executionRoleArn",
+            model_name="modelName",
             primary_container={
-                "image": "string",
-                "model_data_url": "string",
+                "image": "Image",
+                "model_data_url": "ModelDataUrl",
             },
         )
         assert_matches_type(ModelCreateResponse, model, path=["response"])
@@ -246,14 +246,14 @@ class TestAsyncModels:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncMlm) -> None:
         model = await async_client.models.retrieve(
-            "string",
+            "modelName",
         )
         assert_matches_type(ModelDetails, model, path=["response"])
 
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncMlm) -> None:
         response = await async_client.models.with_raw_response.retrieve(
-            "string",
+            "modelName",
         )
 
         assert response.is_closed is True
@@ -264,7 +264,7 @@ class TestAsyncModels:
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncMlm) -> None:
         async with async_client.models.with_streaming_response.retrieve(
-            "string",
+            "modelName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -284,7 +284,7 @@ class TestAsyncModels:
     @parametrize
     async def test_method_update(self, async_client: AsyncMlm) -> None:
         model = await async_client.models.update(
-            "string",
+            model_name="modelName",
             body={},
         )
         assert_matches_type(ModelUpdateResponse, model, path=["response"])
@@ -292,7 +292,7 @@ class TestAsyncModels:
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncMlm) -> None:
         response = await async_client.models.with_raw_response.update(
-            "string",
+            model_name="modelName",
             body={},
         )
 
@@ -304,7 +304,7 @@ class TestAsyncModels:
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncMlm) -> None:
         async with async_client.models.with_streaming_response.update(
-            "string",
+            model_name="modelName",
             body={},
         ) as response:
             assert not response.is_closed
@@ -319,7 +319,7 @@ class TestAsyncModels:
     async def test_path_params_update(self, async_client: AsyncMlm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `model_name` but received ''"):
             await async_client.models.with_raw_response.update(
-                "",
+                model_name="",
                 body={},
             )
 
@@ -351,14 +351,14 @@ class TestAsyncModels:
     @parametrize
     async def test_method_delete(self, async_client: AsyncMlm) -> None:
         model = await async_client.models.delete(
-            "string",
+            "modelName",
         )
         assert_matches_type(object, model, path=["response"])
 
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncMlm) -> None:
         response = await async_client.models.with_raw_response.delete(
-            "string",
+            "modelName",
         )
 
         assert response.is_closed is True
@@ -369,7 +369,7 @@ class TestAsyncModels:
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncMlm) -> None:
         async with async_client.models.with_streaming_response.delete(
-            "string",
+            "modelName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
