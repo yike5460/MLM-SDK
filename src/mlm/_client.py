@@ -8,7 +8,7 @@ from typing_extensions import Self, override
 
 import httpx
 
-from . import _exceptions
+from . import resources, _exceptions
 from ._qs import Querystring
 from ._types import (
     NOT_GIVEN,
@@ -24,7 +24,6 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
-from .resources import models, metrics, instances
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError
 from ._base_client import (
@@ -33,13 +32,23 @@ from ._base_client import (
     AsyncAPIClient,
 )
 
-__all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Mlm", "AsyncMlm", "Client", "AsyncClient"]
+__all__ = [
+    "Timeout",
+    "Transport",
+    "ProxiesTypes",
+    "RequestOptions",
+    "resources",
+    "Mlm",
+    "AsyncMlm",
+    "Client",
+    "AsyncClient",
+]
 
 
 class Mlm(SyncAPIClient):
-    instances: instances.InstancesResource
-    models: models.ModelsResource
-    metrics: metrics.MetricsResource
+    instances: resources.InstancesResource
+    models: resources.ModelsResource
+    metrics: resources.MetricsResource
     with_raw_response: MlmWithRawResponse
     with_streaming_response: MlmWithStreamedResponse
 
@@ -84,9 +93,9 @@ class Mlm(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.instances = instances.InstancesResource(self)
-        self.models = models.ModelsResource(self)
-        self.metrics = metrics.MetricsResource(self)
+        self.instances = resources.InstancesResource(self)
+        self.models = resources.ModelsResource(self)
+        self.metrics = resources.MetricsResource(self)
         self.with_raw_response = MlmWithRawResponse(self)
         self.with_streaming_response = MlmWithStreamedResponse(self)
 
@@ -188,9 +197,9 @@ class Mlm(SyncAPIClient):
 
 
 class AsyncMlm(AsyncAPIClient):
-    instances: instances.AsyncInstancesResource
-    models: models.AsyncModelsResource
-    metrics: metrics.AsyncMetricsResource
+    instances: resources.AsyncInstancesResource
+    models: resources.AsyncModelsResource
+    metrics: resources.AsyncMetricsResource
     with_raw_response: AsyncMlmWithRawResponse
     with_streaming_response: AsyncMlmWithStreamedResponse
 
@@ -235,9 +244,9 @@ class AsyncMlm(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.instances = instances.AsyncInstancesResource(self)
-        self.models = models.AsyncModelsResource(self)
-        self.metrics = metrics.AsyncMetricsResource(self)
+        self.instances = resources.AsyncInstancesResource(self)
+        self.models = resources.AsyncModelsResource(self)
+        self.metrics = resources.AsyncMetricsResource(self)
         self.with_raw_response = AsyncMlmWithRawResponse(self)
         self.with_streaming_response = AsyncMlmWithStreamedResponse(self)
 
@@ -340,30 +349,30 @@ class AsyncMlm(AsyncAPIClient):
 
 class MlmWithRawResponse:
     def __init__(self, client: Mlm) -> None:
-        self.instances = instances.InstancesResourceWithRawResponse(client.instances)
-        self.models = models.ModelsResourceWithRawResponse(client.models)
-        self.metrics = metrics.MetricsResourceWithRawResponse(client.metrics)
+        self.instances = resources.InstancesResourceWithRawResponse(client.instances)
+        self.models = resources.ModelsResourceWithRawResponse(client.models)
+        self.metrics = resources.MetricsResourceWithRawResponse(client.metrics)
 
 
 class AsyncMlmWithRawResponse:
     def __init__(self, client: AsyncMlm) -> None:
-        self.instances = instances.AsyncInstancesResourceWithRawResponse(client.instances)
-        self.models = models.AsyncModelsResourceWithRawResponse(client.models)
-        self.metrics = metrics.AsyncMetricsResourceWithRawResponse(client.metrics)
+        self.instances = resources.AsyncInstancesResourceWithRawResponse(client.instances)
+        self.models = resources.AsyncModelsResourceWithRawResponse(client.models)
+        self.metrics = resources.AsyncMetricsResourceWithRawResponse(client.metrics)
 
 
 class MlmWithStreamedResponse:
     def __init__(self, client: Mlm) -> None:
-        self.instances = instances.InstancesResourceWithStreamingResponse(client.instances)
-        self.models = models.ModelsResourceWithStreamingResponse(client.models)
-        self.metrics = metrics.MetricsResourceWithStreamingResponse(client.metrics)
+        self.instances = resources.InstancesResourceWithStreamingResponse(client.instances)
+        self.models = resources.ModelsResourceWithStreamingResponse(client.models)
+        self.metrics = resources.MetricsResourceWithStreamingResponse(client.metrics)
 
 
 class AsyncMlmWithStreamedResponse:
     def __init__(self, client: AsyncMlm) -> None:
-        self.instances = instances.AsyncInstancesResourceWithStreamingResponse(client.instances)
-        self.models = models.AsyncModelsResourceWithStreamingResponse(client.models)
-        self.metrics = metrics.AsyncMetricsResourceWithStreamingResponse(client.metrics)
+        self.instances = resources.AsyncInstancesResourceWithStreamingResponse(client.instances)
+        self.models = resources.AsyncModelsResourceWithStreamingResponse(client.models)
+        self.metrics = resources.AsyncMetricsResourceWithStreamingResponse(client.metrics)
 
 
 Client = Mlm
