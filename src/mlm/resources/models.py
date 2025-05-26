@@ -6,10 +6,7 @@ import httpx
 
 from ..types import model_create_params, model_update_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from .._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -31,7 +28,7 @@ class ModelsResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> ModelsResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/yike5460/MLM-SDK#accessing-raw-response-data-eg-headers
@@ -213,7 +210,7 @@ class AsyncModelsResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncModelsResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/yike5460/MLM-SDK#accessing-raw-response-data-eg-headers

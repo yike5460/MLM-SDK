@@ -6,7 +6,7 @@ The Mlm Python library provides convenient access to the Mlm REST API from any P
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
-It is generated with [Stainless](https://www.stainlessapi.com/).
+It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
@@ -61,6 +61,24 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 - Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
+
+## Nested params
+
+Nested parameters are dictionaries, typed using `TypedDict`, for example:
+
+```python
+from mlm import Mlm
+
+client = Mlm()
+
+model = client.models.create(
+    primary_container={
+        "image": "Image",
+        "model_data_url": "ModelDataUrl",
+    },
+)
+print(model.primary_container)
+```
 
 ## Handling errors
 
