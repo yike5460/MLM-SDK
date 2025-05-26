@@ -38,12 +38,11 @@ Homepage = "https://github.com/yike5460/MLM-SDK"
 Repository = "https://github.com/yike5460/MLM-SDK"
 
 
-
 [tool.rye]
 managed = true
 # version pins are in requirements-dev.lock
 dev-dependencies = [
-    "pyright>=1.1.359",
+    "pyright==1.1.399",
     "mypy",
     "respx",
     "pytest",
@@ -87,7 +86,7 @@ typecheck = { chain = [
 "typecheck:mypy" = "mypy ."
 
 [build-system]
-requires = ["hatchling", "hatch-fancy-pypi-readme"]
+requires = ["hatchling==1.26.3", "hatch-fancy-pypi-readme"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build]
@@ -129,6 +128,7 @@ testpaths = ["tests"]
 addopts = "--tb=short"
 xfail_strict = true
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
 filterwarnings = [
   "error"
 ]
@@ -147,10 +147,10 @@ exclude = [
 ]
 
 reportImplicitOverride = true
+reportOverlappingOverload = false
 
 reportImportCycles = false
 reportPrivateUsage = false
-
 
 [tool.ruff]
 line-length = 120
@@ -176,7 +176,7 @@ select = [
   "T201",
   "T203",
   # misuse of typing.TYPE_CHECKING
-  "TCH004",
+  "TC004",
   # import rules
   "TID251",
 ]

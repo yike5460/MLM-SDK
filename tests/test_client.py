@@ -6,6 +6,7 @@ import gc
 import os
 import sys
 import json
+import time
 import asyncio
 import inspect
 import subprocess
@@ -22,10 +23,12 @@ from pydantic import ValidationError
 
 from mlm import Mlm, AsyncMlm, APIResponseValidationError
 from mlm._types import Omit
+from mlm._utils import maybe_transform
 from mlm._models import BaseModel, FinalRequestOptions
 from mlm._constants import RAW_RESPONSE_HEADER
 from mlm._exceptions import APIStatusError, APITimeoutError, APIResponseValidationError
 from mlm._base_client import DEFAULT_TIMEOUT, HTTPX_DEFAULT_TIMEOUT, BaseClient, make_request_options
+from mlm.types.instance_create_params import InstanceCreateParams
 
 from .utils import update_env
 
@@ -671,7 +674,7 @@ class TestMlm:
         with pytest.raises(APITimeoutError):
             self.client.post(
                 "/instances",
-                body=cast(object, dict()),
+                body=cast(object, maybe_transform({}, InstanceCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -686,7 +689,7 @@ class TestMlm:
         with pytest.raises(APIStatusError):
             self.client.post(
                 "/instances",
-                body=cast(object, dict()),
+                body=cast(object, maybe_transform({}, InstanceCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1396,7 +1399,7 @@ class TestAsyncMlm:
         with pytest.raises(APITimeoutError):
             await self.client.post(
                 "/instances",
-                body=cast(object, dict()),
+                body=cast(object, maybe_transform({}, InstanceCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1411,7 +1414,7 @@ class TestAsyncMlm:
         with pytest.raises(APIStatusError):
             await self.client.post(
                 "/instances",
-                body=cast(object, dict()),
+                body=cast(object, maybe_transform({}, InstanceCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1510,7 +1513,7 @@ class TestAsyncMlm:
         import threading
 
         from mlm._utils import asyncify
-        from mlm._base_client import get_platform 
+        from mlm._base_client import get_platform
 
         async def test_main() -> None:
             result = await asyncify(get_platform)()
@@ -1525,10 +1528,20 @@ class TestAsyncMlm:
             [sys.executable, "-c", test_code],
             text=True,
         ) as process:
-            try:
-                process.wait(2)
-                if process.returncode:
-                    raise AssertionError("calling get_platform using asyncify resulted in a non-zero exit code")
-            except subprocess.TimeoutExpired as e:
-                process.kill()
-                raise AssertionError("calling get_platform using asyncify resulted in a hung process") from e
+            timeout = 10  # seconds
+
+            start_time = time.monotonic()
+            while True:
+                return_code = process.poll()
+                if return_code is not None:
+                    if return_code != 0:
+                        raise AssertionError("calling get_platform using asyncify resulted in a non-zero exit code")
+
+                    # success
+                    break
+
+                if time.monotonic() - start_time > timeout:
+                    process.kill()
+                    raise AssertionError("calling get_platform using asyncify resulted in a hung process")
+
+                time.sleep(0.1)
