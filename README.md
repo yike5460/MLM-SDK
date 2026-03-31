@@ -1,8 +1,9 @@
 # Mlm Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/mlm-v1.0.svg)](https://pypi.org/project/mlm-v1.0/)
+<!-- prettier-ignore -->
+[![PyPI version](https://img.shields.io/pypi/v/mlm-v1.0.svg?label=pypi%20(stable))](https://pypi.org/project/mlm-v1.0/)
 
-The Mlm Python library provides convenient access to the Mlm REST API from any Python 3.8+
+The Mlm Python library provides convenient access to the Mlm REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
@@ -16,7 +17,7 @@ The REST API documentation can be found on [docs.mlm.com](https://docs.mlm.com).
 
 ```sh
 # install from PyPI
-pip install --pre mlm-v1.0
+pip install '--pre mlm-v1.0'
 ```
 
 ## Usage
@@ -53,6 +54,36 @@ asyncio.run(main())
 
 Functionality between the synchronous and asynchronous clients is otherwise identical.
 
+### With aiohttp
+
+By default, the async client uses `httpx` for HTTP requests. However, for improved concurrency performance you may also use `aiohttp` as the HTTP backend.
+
+You can enable this by installing `aiohttp`:
+
+```sh
+# install from PyPI
+pip install '--pre mlm-v1.0[aiohttp]'
+```
+
+Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
+
+```python
+import asyncio
+from mlm import DefaultAioHttpClient
+from mlm import AsyncMlm
+
+
+async def main() -> None:
+    async with AsyncMlm(
+        http_client=DefaultAioHttpClient(),
+    ) as client:
+        instance = await client.instances.create()
+        print(instance.endpoint_arn)
+
+
+asyncio.run(main())
+```
+
 ## Using types
 
 Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typing.html#typing.TypedDict). Responses are [Pydantic models](https://docs.pydantic.dev) which also provide helper methods for things like:
@@ -72,10 +103,7 @@ from mlm import Mlm
 client = Mlm()
 
 model = client.models.create(
-    primary_container={
-        "image": "Image",
-        "model_data_url": "ModelDataUrl",
-    },
+    primary_container={},
 )
 print(model.primary_container)
 ```
@@ -145,7 +173,7 @@ client.with_options(max_retries=5).instances.create()
 ### Timeouts
 
 By default requests time out after 1 minute. You can configure this with a `timeout` option,
-which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
+which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
 from mlm import Mlm
@@ -331,7 +359,7 @@ print(mlm.__version__)
 
 ## Requirements
 
-Python 3.8 or higher.
+Python 3.9 or higher.
 
 ## Contributing
 

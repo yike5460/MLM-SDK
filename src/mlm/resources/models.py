@@ -5,8 +5,8 @@ from __future__ import annotations
 import httpx
 
 from ..types import model_create_params, model_update_params
-from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from .._utils import maybe_transform, async_maybe_transform
+from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -47,15 +47,15 @@ class ModelsResource(SyncAPIResource):
     def create(
         self,
         *,
-        execution_role_arn: str | NotGiven = NOT_GIVEN,
-        model_name: str | NotGiven = NOT_GIVEN,
-        primary_container: model_create_params.PrimaryContainer | NotGiven = NOT_GIVEN,
+        execution_role_arn: str | Omit = omit,
+        model_name: str | Omit = omit,
+        primary_container: model_create_params.PrimaryContainer | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ModelCreateResponse:
         """
         Create a new model
@@ -94,7 +94,7 @@ class ModelsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ModelDetails:
         """
         Describe a model
@@ -111,7 +111,7 @@ class ModelsResource(SyncAPIResource):
         if not model_name:
             raise ValueError(f"Expected a non-empty value for `model_name` but received {model_name!r}")
         return self._get(
-            f"/models/{model_name}",
+            path_template("/models/{model_name}", model_name=model_name),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -128,7 +128,7 @@ class ModelsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ModelUpdateResponse:
         """
         Update a model (not supported)
@@ -145,7 +145,7 @@ class ModelsResource(SyncAPIResource):
         if not model_name:
             raise ValueError(f"Expected a non-empty value for `model_name` but received {model_name!r}")
         return self._put(
-            f"/models/{model_name}",
+            path_template("/models/{model_name}", model_name=model_name),
             body=maybe_transform(body, model_update_params.ModelUpdateParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -161,7 +161,7 @@ class ModelsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ModelListResponse:
         """List models"""
         return self._get(
@@ -181,7 +181,7 @@ class ModelsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """
         Delete a model
@@ -198,7 +198,7 @@ class ModelsResource(SyncAPIResource):
         if not model_name:
             raise ValueError(f"Expected a non-empty value for `model_name` but received {model_name!r}")
         return self._delete(
-            f"/models/{model_name}",
+            path_template("/models/{model_name}", model_name=model_name),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -229,15 +229,15 @@ class AsyncModelsResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        execution_role_arn: str | NotGiven = NOT_GIVEN,
-        model_name: str | NotGiven = NOT_GIVEN,
-        primary_container: model_create_params.PrimaryContainer | NotGiven = NOT_GIVEN,
+        execution_role_arn: str | Omit = omit,
+        model_name: str | Omit = omit,
+        primary_container: model_create_params.PrimaryContainer | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ModelCreateResponse:
         """
         Create a new model
@@ -276,7 +276,7 @@ class AsyncModelsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ModelDetails:
         """
         Describe a model
@@ -293,7 +293,7 @@ class AsyncModelsResource(AsyncAPIResource):
         if not model_name:
             raise ValueError(f"Expected a non-empty value for `model_name` but received {model_name!r}")
         return await self._get(
-            f"/models/{model_name}",
+            path_template("/models/{model_name}", model_name=model_name),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -310,7 +310,7 @@ class AsyncModelsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ModelUpdateResponse:
         """
         Update a model (not supported)
@@ -327,7 +327,7 @@ class AsyncModelsResource(AsyncAPIResource):
         if not model_name:
             raise ValueError(f"Expected a non-empty value for `model_name` but received {model_name!r}")
         return await self._put(
-            f"/models/{model_name}",
+            path_template("/models/{model_name}", model_name=model_name),
             body=await async_maybe_transform(body, model_update_params.ModelUpdateParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -343,7 +343,7 @@ class AsyncModelsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ModelListResponse:
         """List models"""
         return await self._get(
@@ -363,7 +363,7 @@ class AsyncModelsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> object:
         """
         Delete a model
@@ -380,7 +380,7 @@ class AsyncModelsResource(AsyncAPIResource):
         if not model_name:
             raise ValueError(f"Expected a non-empty value for `model_name` but received {model_name!r}")
         return await self._delete(
-            f"/models/{model_name}",
+            path_template("/models/{model_name}", model_name=model_name),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
