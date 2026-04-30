@@ -1,4 +1,4 @@
 configured_endpoints: 11
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/amazon-web-service%2Fmlm-78ea81b008df59c9731cbeed4559520bde45e207b12757b54af6ffbe61b79e8f.yml
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/amazon-web-service/mlm-78ea81b008df59c9731cbeed4559520bde45e207b12757b54af6ffbe61b79e8f.yml
 openapi_spec_hash: c64d0cb24b8b42c761b1fa973013cc2e
 config_hash: a47660e2a50a90199776e9a6bb379b1f
