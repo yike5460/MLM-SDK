@@ -30,9 +30,9 @@ class TestInstances:
     @parametrize
     def test_method_create_with_all_params(self, client: Mlm) -> None:
         instance = client.instances.create(
-            instance_name="string",
-            instance_type="string",
-            model_name="string",
+            instance_name="instanceName",
+            instance_type="instanceType",
+            model_name="modelName",
         )
         assert_matches_type(InstanceCreateResponse, instance, path=["response"])
 
@@ -59,14 +59,14 @@ class TestInstances:
     @parametrize
     def test_method_retrieve(self, client: Mlm) -> None:
         instance = client.instances.retrieve(
-            "string",
+            "instanceName",
         )
         assert_matches_type(InstanceDetails, instance, path=["response"])
 
     @parametrize
     def test_raw_response_retrieve(self, client: Mlm) -> None:
         response = client.instances.with_raw_response.retrieve(
-            "string",
+            "instanceName",
         )
 
         assert response.is_closed is True
@@ -77,7 +77,7 @@ class TestInstances:
     @parametrize
     def test_streaming_response_retrieve(self, client: Mlm) -> None:
         with client.instances.with_streaming_response.retrieve(
-            "string",
+            "instanceName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -97,22 +97,22 @@ class TestInstances:
     @parametrize
     def test_method_update(self, client: Mlm) -> None:
         instance = client.instances.update(
-            "string",
+            instance_name="instanceName",
         )
         assert_matches_type(InstanceUpdateResponse, instance, path=["response"])
 
     @parametrize
     def test_method_update_with_all_params(self, client: Mlm) -> None:
         instance = client.instances.update(
-            "string",
-            endpoint_config_name="string",
+            instance_name="instanceName",
+            endpoint_config_name="endpointConfigName",
         )
         assert_matches_type(InstanceUpdateResponse, instance, path=["response"])
 
     @parametrize
     def test_raw_response_update(self, client: Mlm) -> None:
         response = client.instances.with_raw_response.update(
-            "string",
+            instance_name="instanceName",
         )
 
         assert response.is_closed is True
@@ -123,7 +123,7 @@ class TestInstances:
     @parametrize
     def test_streaming_response_update(self, client: Mlm) -> None:
         with client.instances.with_streaming_response.update(
-            "string",
+            instance_name="instanceName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -137,7 +137,7 @@ class TestInstances:
     def test_path_params_update(self, client: Mlm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `instance_name` but received ''"):
             client.instances.with_raw_response.update(
-                "",
+                instance_name="",
             )
 
     @parametrize
@@ -168,14 +168,14 @@ class TestInstances:
     @parametrize
     def test_method_delete(self, client: Mlm) -> None:
         instance = client.instances.delete(
-            "string",
+            "instanceName",
         )
         assert instance is None
 
     @parametrize
     def test_raw_response_delete(self, client: Mlm) -> None:
         response = client.instances.with_raw_response.delete(
-            "string",
+            "instanceName",
         )
 
         assert response.is_closed is True
@@ -186,7 +186,7 @@ class TestInstances:
     @parametrize
     def test_streaming_response_delete(self, client: Mlm) -> None:
         with client.instances.with_streaming_response.delete(
-            "string",
+            "instanceName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -205,7 +205,9 @@ class TestInstances:
 
 
 class TestAsyncInstances:
-    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
+    parametrize = pytest.mark.parametrize(
+        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
+    )
 
     @parametrize
     async def test_method_create(self, async_client: AsyncMlm) -> None:
@@ -215,9 +217,9 @@ class TestAsyncInstances:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncMlm) -> None:
         instance = await async_client.instances.create(
-            instance_name="string",
-            instance_type="string",
-            model_name="string",
+            instance_name="instanceName",
+            instance_type="instanceType",
+            model_name="modelName",
         )
         assert_matches_type(InstanceCreateResponse, instance, path=["response"])
 
@@ -244,14 +246,14 @@ class TestAsyncInstances:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncMlm) -> None:
         instance = await async_client.instances.retrieve(
-            "string",
+            "instanceName",
         )
         assert_matches_type(InstanceDetails, instance, path=["response"])
 
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncMlm) -> None:
         response = await async_client.instances.with_raw_response.retrieve(
-            "string",
+            "instanceName",
         )
 
         assert response.is_closed is True
@@ -262,7 +264,7 @@ class TestAsyncInstances:
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncMlm) -> None:
         async with async_client.instances.with_streaming_response.retrieve(
-            "string",
+            "instanceName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -282,22 +284,22 @@ class TestAsyncInstances:
     @parametrize
     async def test_method_update(self, async_client: AsyncMlm) -> None:
         instance = await async_client.instances.update(
-            "string",
+            instance_name="instanceName",
         )
         assert_matches_type(InstanceUpdateResponse, instance, path=["response"])
 
     @parametrize
     async def test_method_update_with_all_params(self, async_client: AsyncMlm) -> None:
         instance = await async_client.instances.update(
-            "string",
-            endpoint_config_name="string",
+            instance_name="instanceName",
+            endpoint_config_name="endpointConfigName",
         )
         assert_matches_type(InstanceUpdateResponse, instance, path=["response"])
 
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncMlm) -> None:
         response = await async_client.instances.with_raw_response.update(
-            "string",
+            instance_name="instanceName",
         )
 
         assert response.is_closed is True
@@ -308,7 +310,7 @@ class TestAsyncInstances:
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncMlm) -> None:
         async with async_client.instances.with_streaming_response.update(
-            "string",
+            instance_name="instanceName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -322,7 +324,7 @@ class TestAsyncInstances:
     async def test_path_params_update(self, async_client: AsyncMlm) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `instance_name` but received ''"):
             await async_client.instances.with_raw_response.update(
-                "",
+                instance_name="",
             )
 
     @parametrize
@@ -353,14 +355,14 @@ class TestAsyncInstances:
     @parametrize
     async def test_method_delete(self, async_client: AsyncMlm) -> None:
         instance = await async_client.instances.delete(
-            "string",
+            "instanceName",
         )
         assert instance is None
 
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncMlm) -> None:
         response = await async_client.instances.with_raw_response.delete(
-            "string",
+            "instanceName",
         )
 
         assert response.is_closed is True
@@ -371,7 +373,7 @@ class TestAsyncInstances:
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncMlm) -> None:
         async with async_client.instances.with_streaming_response.delete(
-            "string",
+            "instanceName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

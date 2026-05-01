@@ -31,7 +31,6 @@ from mlm.types import (
     ModelCreateResponse,
     ModelUpdateResponse,
     ModelListResponse,
-    ModelDeleteResponse,
 )
 ```
 
@@ -41,7 +40,7 @@ Methods:
 - <code title="get /models/{modelName}">client.models.<a href="./src/mlm/resources/models.py">retrieve</a>(model_name) -> <a href="./src/mlm/types/model_details.py">ModelDetails</a></code>
 - <code title="put /models/{modelName}">client.models.<a href="./src/mlm/resources/models.py">update</a>(model_name, \*\*<a href="src/mlm/types/model_update_params.py">params</a>) -> <a href="./src/mlm/types/model_update_response.py">ModelUpdateResponse</a></code>
 - <code title="get /models">client.models.<a href="./src/mlm/resources/models.py">list</a>() -> <a href="./src/mlm/types/model_list_response.py">ModelListResponse</a></code>
-- <code title="delete /models/{modelName}">client.models.<a href="./src/mlm/resources/models.py">delete</a>(model_name) -> <a href="./src/mlm/types/model_delete_response.py">object</a></code>
+- <code title="delete /models/{modelName}">client.models.<a href="./src/mlm/resources/models.py">delete</a>(model_name) -> object</code>
 
 # Metrics
 

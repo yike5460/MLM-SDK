@@ -20,16 +20,16 @@ class TestMetrics:
     @parametrize
     def test_method_list(self, client: Mlm) -> None:
         metric = client.metrics.list(
-            instance_name="string",
-            metric_name="string",
+            instance_name="instanceName",
+            metric_name="metricName",
         )
         assert_matches_type(MetricListResponse, metric, path=["response"])
 
     @parametrize
     def test_raw_response_list(self, client: Mlm) -> None:
         response = client.metrics.with_raw_response.list(
-            instance_name="string",
-            metric_name="string",
+            instance_name="instanceName",
+            metric_name="metricName",
         )
 
         assert response.is_closed is True
@@ -40,8 +40,8 @@ class TestMetrics:
     @parametrize
     def test_streaming_response_list(self, client: Mlm) -> None:
         with client.metrics.with_streaming_response.list(
-            instance_name="string",
-            metric_name="string",
+            instance_name="instanceName",
+            metric_name="metricName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -53,21 +53,23 @@ class TestMetrics:
 
 
 class TestAsyncMetrics:
-    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
+    parametrize = pytest.mark.parametrize(
+        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
+    )
 
     @parametrize
     async def test_method_list(self, async_client: AsyncMlm) -> None:
         metric = await async_client.metrics.list(
-            instance_name="string",
-            metric_name="string",
+            instance_name="instanceName",
+            metric_name="metricName",
         )
         assert_matches_type(MetricListResponse, metric, path=["response"])
 
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncMlm) -> None:
         response = await async_client.metrics.with_raw_response.list(
-            instance_name="string",
-            metric_name="string",
+            instance_name="instanceName",
+            metric_name="metricName",
         )
 
         assert response.is_closed is True
@@ -78,8 +80,8 @@ class TestAsyncMetrics:
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncMlm) -> None:
         async with async_client.metrics.with_streaming_response.list(
-            instance_name="string",
-            metric_name="string",
+            instance_name="instanceName",
+            metric_name="metricName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

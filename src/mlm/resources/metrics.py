@@ -5,11 +5,8 @@ from __future__ import annotations
 import httpx
 
 from ..types import metric_list_params
-from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from .._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from .._types import Body, Query, Headers, NotGiven, not_given
+from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -18,9 +15,7 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import (
-    make_request_options,
-)
+from .._base_client import make_request_options
 from ..types.metric_list_response import MetricListResponse
 
 __all__ = ["MetricsResource", "AsyncMetricsResource"]
@@ -29,10 +24,21 @@ __all__ = ["MetricsResource", "AsyncMetricsResource"]
 class MetricsResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> MetricsResourceWithRawResponse:
+        """
+        This property can be used as a prefix for any HTTP method call to return
+        the raw response object instead of the parsed content.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#accessing-raw-response-data-eg-headers
+        """
         return MetricsResourceWithRawResponse(self)
 
     @cached_property
     def with_streaming_response(self) -> MetricsResourceWithStreamingResponse:
+        """
+        An alternative to `.with_raw_response` that doesn't eagerly read the response body.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#with_streaming_response
+        """
         return MetricsResourceWithStreamingResponse(self)
 
     def list(
@@ -45,7 +51,7 @@ class MetricsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> MetricListResponse:
         """
         Get instance metrics
@@ -81,10 +87,21 @@ class MetricsResource(SyncAPIResource):
 class AsyncMetricsResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncMetricsResourceWithRawResponse:
+        """
+        This property can be used as a prefix for any HTTP method call to return
+        the raw response object instead of the parsed content.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#accessing-raw-response-data-eg-headers
+        """
         return AsyncMetricsResourceWithRawResponse(self)
 
     @cached_property
     def with_streaming_response(self) -> AsyncMetricsResourceWithStreamingResponse:
+        """
+        An alternative to `.with_raw_response` that doesn't eagerly read the response body.
+
+        For more information, see https://www.github.com/yike5460/MLM-SDK#with_streaming_response
+        """
         return AsyncMetricsResourceWithStreamingResponse(self)
 
     async def list(
@@ -97,7 +114,7 @@ class AsyncMetricsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> MetricListResponse:
         """
         Get instance metrics

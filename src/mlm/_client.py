@@ -3,26 +3,28 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Union, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 from typing_extensions import Self, override
 
 import httpx
 
-from . import resources, _exceptions
+from . import _exceptions
 from ._qs import Querystring
 from ._types import (
-    NOT_GIVEN,
     Omit,
     Timeout,
     NotGiven,
     Transport,
     ProxiesTypes,
     RequestOptions,
+    not_given,
 )
 from ._utils import (
     is_given,
+    is_mapping_t,
     get_async_library,
 )
+from ._compat import cached_property
 from ._version import __version__
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError
@@ -32,33 +34,23 @@ from ._base_client import (
     AsyncAPIClient,
 )
 
-__all__ = [
-    "Timeout",
-    "Transport",
-    "ProxiesTypes",
-    "RequestOptions",
-    "resources",
-    "Mlm",
-    "AsyncMlm",
-    "Client",
-    "AsyncClient",
-]
+if TYPE_CHECKING:
+    from .resources import models, metrics, instances
+    from .resources.models import ModelsResource, AsyncModelsResource
+    from .resources.metrics import MetricsResource, AsyncMetricsResource
+    from .resources.instances import InstancesResource, AsyncInstancesResource
+
+__all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Mlm", "AsyncMlm", "Client", "AsyncClient"]
 
 
 class Mlm(SyncAPIClient):
-    instances: resources.InstancesResource
-    models: resources.ModelsResource
-    metrics: resources.MetricsResource
-    with_raw_response: MlmWithRawResponse
-    with_streaming_response: MlmWithStreamedResponse
-
     # client options
 
     def __init__(
         self,
         *,
         base_url: str | httpx.URL | None = None,
-        timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -76,11 +68,20 @@ class Mlm(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous mlm client instance."""
+        """Construct a new synchronous Mlm client instance."""
         if base_url is None:
             base_url = os.environ.get("MLM_BASE_URL")
         if base_url is None:
             base_url = f"{baseUrl}"
+
+        custom_headers_env = os.environ.get("MLM_CUSTOM_HEADERS")
+        if custom_headers_env is not None:
+            parsed: dict[str, str] = {}
+            for line in custom_headers_env.split("\n"):
+                colon = line.find(":")
+                if colon >= 0:
+                    parsed[line[:colon].strip()] = line[colon + 1 :].strip()
+            default_headers = {**parsed, **(default_headers if is_mapping_t(default_headers) else {})}
 
         super().__init__(
             version=__version__,
@@ -93,11 +94,31 @@ class Mlm(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.instances = resources.InstancesResource(self)
-        self.models = resources.ModelsResource(self)
-        self.metrics = resources.MetricsResource(self)
-        self.with_raw_response = MlmWithRawResponse(self)
-        self.with_streaming_response = MlmWithStreamedResponse(self)
+    @cached_property
+    def instances(self) -> InstancesResource:
+        from .resources.instances import InstancesResource
+
+        return InstancesResource(self)
+
+    @cached_property
+    def models(self) -> ModelsResource:
+        from .resources.models import ModelsResource
+
+        return ModelsResource(self)
+
+    @cached_property
+    def metrics(self) -> MetricsResource:
+        from .resources.metrics import MetricsResource
+
+        return MetricsResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> MlmWithRawResponse:
+        return MlmWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> MlmWithStreamedResponse:
+        return MlmWithStreamedResponse(self)
 
     @property
     @override
@@ -117,9 +138,9 @@ class Mlm(SyncAPIClient):
         self,
         *,
         base_url: str | httpx.URL | None = None,
-        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.Client | None = None,
-        max_retries: int | NotGiven = NOT_GIVEN,
+        max_retries: int | NotGiven = not_given,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -197,19 +218,13 @@ class Mlm(SyncAPIClient):
 
 
 class AsyncMlm(AsyncAPIClient):
-    instances: resources.AsyncInstancesResource
-    models: resources.AsyncModelsResource
-    metrics: resources.AsyncMetricsResource
-    with_raw_response: AsyncMlmWithRawResponse
-    with_streaming_response: AsyncMlmWithStreamedResponse
-
     # client options
 
     def __init__(
         self,
         *,
         base_url: str | httpx.URL | None = None,
-        timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -227,11 +242,20 @@ class AsyncMlm(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async mlm client instance."""
+        """Construct a new async AsyncMlm client instance."""
         if base_url is None:
             base_url = os.environ.get("MLM_BASE_URL")
         if base_url is None:
             base_url = f"{baseUrl}"
+
+        custom_headers_env = os.environ.get("MLM_CUSTOM_HEADERS")
+        if custom_headers_env is not None:
+            parsed: dict[str, str] = {}
+            for line in custom_headers_env.split("\n"):
+                colon = line.find(":")
+                if colon >= 0:
+                    parsed[line[:colon].strip()] = line[colon + 1 :].strip()
+            default_headers = {**parsed, **(default_headers if is_mapping_t(default_headers) else {})}
 
         super().__init__(
             version=__version__,
@@ -244,11 +268,31 @@ class AsyncMlm(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.instances = resources.AsyncInstancesResource(self)
-        self.models = resources.AsyncModelsResource(self)
-        self.metrics = resources.AsyncMetricsResource(self)
-        self.with_raw_response = AsyncMlmWithRawResponse(self)
-        self.with_streaming_response = AsyncMlmWithStreamedResponse(self)
+    @cached_property
+    def instances(self) -> AsyncInstancesResource:
+        from .resources.instances import AsyncInstancesResource
+
+        return AsyncInstancesResource(self)
+
+    @cached_property
+    def models(self) -> AsyncModelsResource:
+        from .resources.models import AsyncModelsResource
+
+        return AsyncModelsResource(self)
+
+    @cached_property
+    def metrics(self) -> AsyncMetricsResource:
+        from .resources.metrics import AsyncMetricsResource
+
+        return AsyncMetricsResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> AsyncMlmWithRawResponse:
+        return AsyncMlmWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> AsyncMlmWithStreamedResponse:
+        return AsyncMlmWithStreamedResponse(self)
 
     @property
     @override
@@ -268,9 +312,9 @@ class AsyncMlm(AsyncAPIClient):
         self,
         *,
         base_url: str | httpx.URL | None = None,
-        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.AsyncClient | None = None,
-        max_retries: int | NotGiven = NOT_GIVEN,
+        max_retries: int | NotGiven = not_given,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -348,31 +392,103 @@ class AsyncMlm(AsyncAPIClient):
 
 
 class MlmWithRawResponse:
+    _client: Mlm
+
     def __init__(self, client: Mlm) -> None:
-        self.instances = resources.InstancesResourceWithRawResponse(client.instances)
-        self.models = resources.ModelsResourceWithRawResponse(client.models)
-        self.metrics = resources.MetricsResourceWithRawResponse(client.metrics)
+        self._client = client
+
+    @cached_property
+    def instances(self) -> instances.InstancesResourceWithRawResponse:
+        from .resources.instances import InstancesResourceWithRawResponse
+
+        return InstancesResourceWithRawResponse(self._client.instances)
+
+    @cached_property
+    def models(self) -> models.ModelsResourceWithRawResponse:
+        from .resources.models import ModelsResourceWithRawResponse
+
+        return ModelsResourceWithRawResponse(self._client.models)
+
+    @cached_property
+    def metrics(self) -> metrics.MetricsResourceWithRawResponse:
+        from .resources.metrics import MetricsResourceWithRawResponse
+
+        return MetricsResourceWithRawResponse(self._client.metrics)
 
 
 class AsyncMlmWithRawResponse:
+    _client: AsyncMlm
+
     def __init__(self, client: AsyncMlm) -> None:
-        self.instances = resources.AsyncInstancesResourceWithRawResponse(client.instances)
-        self.models = resources.AsyncModelsResourceWithRawResponse(client.models)
-        self.metrics = resources.AsyncMetricsResourceWithRawResponse(client.metrics)
+        self._client = client
+
+    @cached_property
+    def instances(self) -> instances.AsyncInstancesResourceWithRawResponse:
+        from .resources.instances import AsyncInstancesResourceWithRawResponse
+
+        return AsyncInstancesResourceWithRawResponse(self._client.instances)
+
+    @cached_property
+    def models(self) -> models.AsyncModelsResourceWithRawResponse:
+        from .resources.models import AsyncModelsResourceWithRawResponse
+
+        return AsyncModelsResourceWithRawResponse(self._client.models)
+
+    @cached_property
+    def metrics(self) -> metrics.AsyncMetricsResourceWithRawResponse:
+        from .resources.metrics import AsyncMetricsResourceWithRawResponse
+
+        return AsyncMetricsResourceWithRawResponse(self._client.metrics)
 
 
 class MlmWithStreamedResponse:
+    _client: Mlm
+
     def __init__(self, client: Mlm) -> None:
-        self.instances = resources.InstancesResourceWithStreamingResponse(client.instances)
-        self.models = resources.ModelsResourceWithStreamingResponse(client.models)
-        self.metrics = resources.MetricsResourceWithStreamingResponse(client.metrics)
+        self._client = client
+
+    @cached_property
+    def instances(self) -> instances.InstancesResourceWithStreamingResponse:
+        from .resources.instances import InstancesResourceWithStreamingResponse
+
+        return InstancesResourceWithStreamingResponse(self._client.instances)
+
+    @cached_property
+    def models(self) -> models.ModelsResourceWithStreamingResponse:
+        from .resources.models import ModelsResourceWithStreamingResponse
+
+        return ModelsResourceWithStreamingResponse(self._client.models)
+
+    @cached_property
+    def metrics(self) -> metrics.MetricsResourceWithStreamingResponse:
+        from .resources.metrics import MetricsResourceWithStreamingResponse
+
+        return MetricsResourceWithStreamingResponse(self._client.metrics)
 
 
 class AsyncMlmWithStreamedResponse:
+    _client: AsyncMlm
+
     def __init__(self, client: AsyncMlm) -> None:
-        self.instances = resources.AsyncInstancesResourceWithStreamingResponse(client.instances)
-        self.models = resources.AsyncModelsResourceWithStreamingResponse(client.models)
-        self.metrics = resources.AsyncMetricsResourceWithStreamingResponse(client.metrics)
+        self._client = client
+
+    @cached_property
+    def instances(self) -> instances.AsyncInstancesResourceWithStreamingResponse:
+        from .resources.instances import AsyncInstancesResourceWithStreamingResponse
+
+        return AsyncInstancesResourceWithStreamingResponse(self._client.instances)
+
+    @cached_property
+    def models(self) -> models.AsyncModelsResourceWithStreamingResponse:
+        from .resources.models import AsyncModelsResourceWithStreamingResponse
+
+        return AsyncModelsResourceWithStreamingResponse(self._client.models)
+
+    @cached_property
+    def metrics(self) -> metrics.AsyncMetricsResourceWithStreamingResponse:
+        from .resources.metrics import AsyncMetricsResourceWithStreamingResponse
+
+        return AsyncMetricsResourceWithStreamingResponse(self._client.metrics)
 
 
 Client = Mlm

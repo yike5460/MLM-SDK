@@ -25,7 +25,7 @@ import httpx
 import pydantic
 
 from ._types import NoneType
-from ._utils import is_given, extract_type_arg, is_annotated_type, extract_type_var_from_base
+from ._utils import is_given, extract_type_arg, is_annotated_type, is_type_alias_type, extract_type_var_from_base
 from ._models import BaseModel, is_basemodel
 from ._constants import RAW_RESPONSE_HEADER, OVERRIDE_CAST_TO_HEADER
 from ._streaming import Stream, AsyncStream, is_stream_class_type, extract_stream_chunk_type
@@ -55,6 +55,9 @@ class BaseAPIResponse(Generic[R]):
 
     http_response: httpx.Response
 
+    retries_taken: int
+    """The number of retries made. If no retries happened this will be `0`"""
+
     def __init__(
         self,
         *,
@@ -64,6 +67,7 @@ class BaseAPIResponse(Generic[R]):
         stream: bool,
         stream_cls: type[Stream[Any]] | type[AsyncStream[Any]] | None,
         options: FinalRequestOptions,
+        retries_taken: int = 0,
     ) -> None:
         self._cast_to = cast_to
         self._client = client
@@ -72,6 +76,7 @@ class BaseAPIResponse(Generic[R]):
         self._stream_cls = stream_cls
         self._options = options
         self.http_response = raw
+        self.retries_taken = retries_taken
 
     @property
     def headers(self) -> httpx.Headers:
@@ -121,9 +126,17 @@ class BaseAPIResponse(Generic[R]):
         )
 
     def _parse(self, *, to: type[_T] | None = None) -> R | _T:
+        cast_to = to if to is not None else self._cast_to
+
+        # unwrap `TypeAlias('Name', T)` -> `T`
+        if is_type_alias_type(cast_to):
+            cast_to = cast_to.__value__  # type: ignore[unreachable]
+
         # unwrap `Annotated[T, ...]` -> `T`
-        if to and is_annotated_type(to):
-            to = extract_type_arg(to, 0)
+        if cast_to and is_annotated_type(cast_to):
+            cast_to = extract_type_arg(cast_to, 0)
+
+        origin = get_origin(cast_to) or cast_to
 
         if self._is_sse_stream:
             if to:
@@ -139,6 +152,7 @@ class BaseAPIResponse(Generic[R]):
                         ),
                         response=self.http_response,
                         client=cast(Any, self._client),
+                        options=self._options,
                     ),
                 )
 
@@ -149,6 +163,7 @@ class BaseAPIResponse(Generic[R]):
                         cast_to=extract_stream_chunk_type(self._stream_cls),
                         response=self.http_response,
                         client=cast(Any, self._client),
+                        options=self._options,
                     ),
                 )
 
@@ -159,17 +174,12 @@ class BaseAPIResponse(Generic[R]):
             return cast(
                 R,
                 stream_cls(
-                    cast_to=self._cast_to,
+                    cast_to=cast_to,
                     response=self.http_response,
                     client=cast(Any, self._client),
+                    options=self._options,
                 ),
             )
-
-        cast_to = to if to is not None else self._cast_to
-
-        # unwrap `Annotated[T, ...]` -> `T`
-        if is_annotated_type(cast_to):
-            cast_to = extract_type_arg(cast_to, 0)
 
         if cast_to is NoneType:
             return cast(R, None)
@@ -187,7 +197,8 @@ class BaseAPIResponse(Generic[R]):
         if cast_to == float:
             return cast(R, float(response.text))
 
-        origin = get_origin(cast_to) or cast_to
+        if cast_to == bool:
+            return cast(R, response.text.lower() == "true")
 
         if origin == APIResponse:
             raise RuntimeError("Unexpected state - cast_to is `APIResponse`")
@@ -202,7 +213,13 @@ class BaseAPIResponse(Generic[R]):
                 raise ValueError(f"Subclasses of httpx.Response cannot be passed to `cast_to`")
             return cast(R, response)
 
-        if inspect.isclass(origin) and not issubclass(origin, BaseModel) and issubclass(origin, pydantic.BaseModel):
+        if (
+            inspect.isclass(
+                origin  # pyright: ignore[reportUnknownArgumentType]
+            )
+            and not issubclass(origin, BaseModel)
+            and issubclass(origin, pydantic.BaseModel)
+        ):
             raise TypeError("Pydantic models must subclass our base model type, e.g. `from mlm import BaseModel`")
 
         if (
@@ -219,7 +236,7 @@ class BaseAPIResponse(Generic[R]):
         # split is required to handle cases where additional information is included
         # in the response, e.g. application/json; charset=utf-8
         content_type, *_ = response.headers.get("content-type", "*").split(";")
-        if content_type != "application/json":
+        if not content_type.endswith("json"):
             if is_basemodel(cast_to):
                 try:
                     data = response.json()
@@ -255,12 +272,10 @@ class BaseAPIResponse(Generic[R]):
 
 class APIResponse(BaseAPIResponse[R]):
     @overload
-    def parse(self, *, to: type[_T]) -> _T:
-        ...
+    def parse(self, *, to: type[_T]) -> _T: ...
 
     @overload
-    def parse(self) -> R:
-        ...
+    def parse(self) -> R: ...
 
     def parse(self, *, to: type[_T] | None = None) -> R | _T:
         """Returns the rich python representation of this response's data.
@@ -359,12 +374,10 @@ class APIResponse(BaseAPIResponse[R]):
 
 class AsyncAPIResponse(BaseAPIResponse[R]):
     @overload
-    async def parse(self, *, to: type[_T]) -> _T:
-        ...
+    async def parse(self, *, to: type[_T]) -> _T: ...
 
     @overload
-    async def parse(self) -> R:
-        ...
+    async def parse(self) -> R: ...
 
     async def parse(self, *, to: type[_T] | None = None) -> R | _T:
         """Returns the rich python representation of this response's data.
